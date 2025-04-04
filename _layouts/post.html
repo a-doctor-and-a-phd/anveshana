@@ -1,0 +1,71 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-header">
+    <div class="post-meta">
+      <span class="post-date">{{ page.date | date: site.learning_journal.date_format }}</span>
+      <span class="post-author author-{{ page.author }}">{{ page.author }}</span>
+    </div>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <div class="post-tags">
+      {% for tag in page.tags %}
+      <span class="post-tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+  </header>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  {% include question-related.html %}
+
+  <div class="post-actions">
+    <button id="copyQuestionTemplate" class="button-primary">Copy Question Template</button>
+    <div id="templateCopiedMessage" class="copied-message">Template copied to clipboard!</div>
+  </div>
+
+  <div class="post-navigation">
+    {% if page.previous.url %}
+    <a class="prev" href="{{ page.previous.url | relative_url }}">&larr; {{ page.previous.title }}</a>
+    {% endif %}
+    {% if page.next.url %}
+    <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &rarr;</a>
+    {% endif %}
+  </div>
+</article>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const copyBtn = document.getElementById('copyQuestionTemplate');
+    const copiedMessage = document.getElementById('templateCopiedMessage');
+    
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function() {
+        const template = `---
+layout: question
+title: "Your question title"
+date: {{ page.date | date: '%Y-%m-%d' }}
+status: open
+related_post: {{ page.path }}
+related_tags: [{{ page.tags | join: ', ' }}]
+author: {{ page.author }}
+priority: medium
+---
+
+Your question details here...`;
+
+        navigator.clipboard.writeText(template).then(function() {
+          // Show copied message
+          copiedMessage.style.opacity = '1';
+
+          // Hide after 2 seconds
+          setTimeout(function() {
+            copiedMessage.style.opacity = '0';
+          }, 2000);
+        });
+      });
+    }
+  });
+</script>

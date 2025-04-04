@@ -1,0 +1,107 @@
+:root {
+  /* Light theme - inspired by the shared palettes */
+  --background: #F6F2FF;  /* Light lavender background from second palette */
+  --card: #FFFFFF;
+  --heading: #297373;  /* Teal from third palette */
+  --text: #393A3A;     /* Dark gray - slightly softened from third palette */
+  --text-muted: #7EA16B;  /* Muted green from first palette */
+  --border: #E6E6E6;
+  --shadow: rgba(57, 58, 58, 0.1);
+  --hover-bg: #F1F7E6;  /* Very light version of the lime green */
+
+  /* Primary and secondary colors */
+  --primary: #297373;   /* Teal from third palette */
+  --primary-rgb: 41, 115, 115;
+  --primary-dark: #1D5C5C;
+
+  --secondary: #FF8552;  /* Coral/orange from third palette */
+  --secondary-rgb: 255, 133, 82;
+  --secondary-dark: #E66F3E;
+
+  /* Additional UI elements */
+  --code-bg: #F0F0F7;
+  --filter-bg: #E9ECF0;
+  --tag-bg: #F1F7E6;   /* Light lime green */
+
+  /* Priority indicators */
+  --priority-high: #7D161E;     /* Deep red from second palette */
+  --priority-high-rgb: 125, 22, 30;
+
+  --priority-medium: #7EA16B;   /* Green from second palette */
+  --priority-medium-rgb: 126, 161, 107;
+
+  --priority-low: #C3D898;      /* Light green from second palette */
+  --priority-low-rgb: 195, 216, 152;
+
+  /* Status indicators */
+  --status-open: #5EB1BF;       /* Teal from third palette */
+  --status-open-rgb: 94, 177, 191;
+
+  --status-in-progress: #7EA16B; /* Green from second palette */
+  --status-in-progress-rgb: 126, 161, 107;
+
+  --status-closed: #B98EA7;     /* Mauve from first palette */
+  --status-closed-rgb: 185, 142, 167;
+
+     /* Author distinction colors - same in both themes */
+  --author-one: #00BFA5;      /* Teal green */
+--author-one-rgb: 0, 191, 165;
+
+  --author-two: #E28413;       /* Amber orange */
+  --author-two-rgb: 226, 132, 19;
+
+}
+
+[data-theme="dark"] {
+  /* Dark theme */
+  --background: #212922;  /* Dark green/black from first and third palettes */
+  --card: #2D3A4A;        /* Dark slate from first palette */
+  --heading: #DCCFFF;     /* Light lavender from second palette */
+  --text: #E6E6E6;        /* Light gray */
+  --text-muted: #A7B8C0;
+  --border: #3D5A6C;      /* Slate blue border from first palette */
+  --shadow: rgba(0, 0, 0, 0.4);
+  --hover-bg: #2D4A4A;    /* Dark teal hover */
+
+  /* Primary and secondary colors */
+  --primary: #5EB1BF;     /* Lighter teal from second palette */
+  --primary-rgb: 94, 177, 191;
+  --primary-dark: #297373;
+
+  --secondary: #FF8552;   /* Coral/orange from third palette */
+  --secondary-rgb: 255, 133, 82;
+  --secondary-dark: #E66F3E;
+
+  /* Additional UI elements */
+  --code-bg: #23022E;     /* Deep purple from second palette */
+  --filter-bg: #3D5A6C;   /* Slate blue */
+  --tag-bg: #2D4A4A;      /* Dark teal */
+
+  /* Priority indicators - keeping same colors for consistency */
+  --priority-high: #FF8552;    /* Coral/orange */
+  --priority-high-rgb: 255, 133, 82;
+
+  --priority-medium: #E9D758;  /* Yellow */
+  --priority-medium-rgb: 233, 215, 88;
+
+  --priority-low: #7EA16B;     /* Green */
+  --priority-low-rgb: 126, 161, 107;
+
+  /* Status indicators */
+  --status-open: #FF8552;       /* Coral/orange */
+  --status-open-rgb: 255, 133, 82;
+
+  --status-in-progress: #E9D758; /* Yellow */
+  --status-in-progress-rgb: 233, 215, 88;
+
+  --status-closed: #7EA16B;     /* Green */
+  --status-closed-rgb: 126, 161, 107;
+
+     /* Author distinction colors - same in both themes */
+  --author-one: #00BFA5;      /* Teal green */
+--author-one-rgb: 0, 191, 165;
+
+  --author-two: #E28413;       /* Amber orange */
+  --author-two-rgb: 226, 132, 19;
+}
+

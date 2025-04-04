@@ -1,0 +1,245 @@
+---
+layout: default
+---
+
+<div class="home-header">
+  <h1 class="page-title">{{ site.title }}</h1>
+  <p class="page-description">{{ site.description }}</p>
+</div>
+
+<div class="search-container">
+  <input type="text" id="searchInput" class="search-input" placeholder="Search entries...">
+</div>
+
+<div class="calendar-preview">
+  <div class="section-header">
+    <h2>Recent Activity</h2>
+    <div class="header-actions">
+      <button id="newPostTemplate" class="template-button" title="Copy new post template">+</button>
+      <a href="{{ '/calendar' | relative_url }}" class="view-all">View Calendar</a>
+    </div>
+  </div>
+  <div id="calendarPreview" class="calendar-preview-grid"></div>
+</div>
+
+<div class="posts-grid" id="postsContainer">
+  {% assign posts = site.posts | sort: 'date' | reverse %}
+  {% for post in posts %}
+  {% assign author_data = site.data.authors[post.author] %}
+  <article class="post-card" data-author="{{ post.author }}">
+    <div class="post-meta">
+      <span class="post-date">{{ post.date | date: site.learning_journal.date_format }}</span>
+      <span class="post-author author-{{ post.author }}" style="color: {{ author_data.color }};">
+        {{ author_data.display_name }}
+      </span>
+    </div>
+    <h2 class="post-title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+    <div class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 25 }}</div>
+    <div class="post-tags">
+      {% for tag in post.tags %}
+      <span class="post-tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+  </article>
+  {% endfor %}
+</div>
+
+<div class="section-divider"></div>
+
+<div class="questions-preview">
+  <div class="section-header">
+    <h2>Open Questions</h2>
+    <div class="header-actions">
+      <button id="newQuestionTemplate" class="template-button" title="Copy new question template">+</button>
+      <a href="{{ '/questions' | relative_url }}" class="view-all">View All Questions</a>
+    </div>
+  </div>
+
+  <div class="questions-preview-grid">
+  {% assign open_questions = site.questions | where: "status", "open" | sort: 'date' | reverse | limit: 3 %}
+  {% if open_questions.size > 0 %}
+    {% for question in open_questions %}
+    {% assign author_data = site.data.authors[question.author] %}
+    <div class="question-card status-{{ question.status }}">
+      <div class="question-status">{{ question.status | replace: "-", " " | capitalize }}</div>
+      <h3 class="question-title"><a href="{{ question.url | relative_url }}">{{ question.title }}</a></h3>
+      <div class="question-meta">
+        <span class="question-date">{{ question.date | date: site.learning_journal.date_format }}</span>
+        <span class="question-author author-{{ question.author }}" style="color: {{ author_data.color }};">
+          {{ author_data.display_name }}
+        </span>
+        {% if question.priority %}
+        <span class="question-priority priority-{{ question.priority | downcase }}">{{ question.priority }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-message">No open questions at the moment.</div>
+  {% endif %}
+  </div>
+</div>
+
+<!-- Copy notification element -->
+<div id="copyNotification" class="copy-notification">
+  Template copied to clipboard!
+</div>
+
+<!-- Template generator script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const newPostButton = document.getElementById('newPostTemplate');
+  const newQuestionButton = document.getElementById('newQuestionTemplate');
+  const copyNotification = document.getElementById('copyNotification');
+  const searchInput = document.getElementById('searchInput');
+  const postsContainer = document.getElementById('postsContainer');
+
+  // Search functionality
+  if (searchInput && postsContainer) {
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const postCards = postsContainer.querySelectorAll('.post-card');
+
+      postCards.forEach(card => {
+        const cardContent = card.textContent.toLowerCase();
+        if (cardContent.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Show a message if no results are found
+      const visibleCards = postsContainer.querySelectorAll('.post-card[style="display: block;"]');
+      const noResultsMessage = document.getElementById('noResultsMessage');
+
+      if (visibleCards.length === 0 && searchTerm !== '') {
+        if (!noResultsMessage) {
+          const message = document.createElement('div');
+          message.id = 'noResultsMessage';
+          message.className = 'no-results-message';
+          message.textContent = 'No posts match your search.';
+          postsContainer.appendChild(message);
+        }
+      } else if (noResultsMessage) {
+        noResultsMessage.remove();
+      }
+    });
+  }
+
+  // Post template function
+  if (newPostButton) {
+    newPostButton.addEventListener('click', function() {
+      const today = new Date();
+      const dateStr = today.toISOString().split('T')[0];
+
+      // Generate the author selection based on available authors
+      let authorOptions = '';
+      {% for author in site.data.authors %}
+      authorOptions += '# {{ author[1].display_name }}: {{ author[0] }}\n';
+      {% endfor %}
+
+      const postTemplate = `---
+layout: post
+title: "Learning Journal: [Topic]"
+date: ${dateStr}
+# Choose an author from the options below:
+${authorOptions}author: [author-id]
+tags: [topic1, topic2]
+---
+
+## What I Learned Today
+
+[Describe what you learned today]
+
+## Challenges I Faced
+
+[Describe any challenges or problems you encountered]
+
+## How I Overcame Them
+
+[Explain how you solved the problems or what you plan to try next]
+
+## Resources I Found Helpful
+
+- [Resource 1](url)
+- [Resource 2](url)
+
+## Tomorrow's Goals
+
+- [ ] Goal 1
+- [ ] Goal 2
+- [ ] Goal 3
+`;
+
+      copyToClipboard(postTemplate);
+    });
+  }
+
+  // Question template function
+  if (newQuestionButton) {
+    newQuestionButton.addEventListener('click', function() {
+      const today = new Date();
+      const dateStr = today.toISOString().split('T')[0];
+
+      // Generate the author selection based on available authors
+      let authorOptions = '';
+      {% for author in site.data.authors %}
+      authorOptions += '# {{ author[1].display_name }}: {{ author[0] }}\n';
+      {% endfor %}
+
+      const questionTemplate = `---
+layout: question
+title: "[Your Question Title]"
+date: ${dateStr}
+# Choose an author from the options below:
+${authorOptions}author: [author-id]
+status: open
+priority: medium
+related_tags: [topic1, topic2]
+---
+
+## Question
+
+[Clearly state your question here]
+
+## Context
+
+[Provide any background information that helps understand the question]
+
+## What I've Tried
+
+[Describe what approaches you've already attempted]
+
+## Why This Is Important
+
+[Explain why you need to know this or how it will help your learning]
+`;
+
+      copyToClipboard(questionTemplate);
+    });
+  }
+
+  // Helper function to copy to clipboard
+  function copyToClipboard(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    copyNotification.classList.add('show');
+    setTimeout(function() {
+      copyNotification.classList.remove('show');
+    }, 3000);
+  }
+});
+</script>
+
+<style>
+</style>

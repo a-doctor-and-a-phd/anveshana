@@ -1,0 +1,16 @@
+{% assign related_post_path = page.path %}
+{% assign related_questions = site.questions | where: "related_post", related_post_path %}
+
+{% if related_questions.size > 0 %}
+<div class="related-questions">
+  <h3>Questions about this topic:</h3>
+  <ul class="questions-list">
+    {% for question in related_questions %}
+    <li>
+      <a href="{{ question.url | relative_url }}">{{ question.title }}</a>
+      <span class="question-status status-{{ question.status }}">{{ question.status }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

@@ -1,0 +1,229 @@
+---
+layout: default
+---
+<article class="question">
+  <header class="question-header">
+    <div class="question-status status-{{ page.status }}">{{ page.status }}</div>
+    <h1 class="question-title">{{ page.title }}</h1>
+
+    <div class="question-meta">
+  <span class="question-date">Asked on {{ page.date | date: site.learning_journal.date_format }}</span>
+  <span class="question-author author-{{ page.author }}">
+    {% if site.data.authors[page.author] %}
+      {{ site.data.authors[page.author].display_name }}
+    {% else %}
+      {{ page.author }}
+    {% endif %}
+  </span>
+  <span class="question-priority priority-{{ page.priority }}">Priority: {{ page.priority }}</span>
+</div>
+
+    {% if page.related_post %}
+    <div class="question-related-post">
+      <span>From:</span>
+      <a href="{{ page.related_post | replace: '_posts/', '' | replace: '.md', '' | prepend: '/' | relative_url }}">{{ page.related_post | replace: '-', ' ' | replace: '_posts/', '' | replace: '.md', '' }}</a>
+    </div>
+    {% endif %}
+
+    <div class="question-tags">
+      {% for tag in page.related_tags %}
+      <span class="question-tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+  </header>
+
+  <div class="question-content">
+    {{ content }}
+  </div>
+
+  {% if page.status == 'answered' and page.answer_post %}
+  <div class="question-answer">
+    <h2>Answer</h2>
+    <p>This question has been answered in the following post:</p>
+    <a href="{{ page.answer_post | relative_url }}" class="answer-link">Read the answer</a>
+  </div>
+  {% endif %}
+
+  <div class="question-actions">
+    <!-- Status update section -->
+    <div class="status-update-container">
+      <h3>Update Question Status</h3>
+      <div class="status-buttons">
+        <button class="status-button {% if page.status == 'open' %}active{% endif %}" data-status="open">Open</button>
+        <button class="status-button {% if page.status == 'in-progress' %}active{% endif %}" data-status="in-progress">In Progress</button>
+        <button class="status-button {% if page.status == 'answered' %}active{% endif %}" data-status="answered">Answered</button>
+      </div>
+
+      <!-- Answer post URL input (shown only when status is 'answered') -->
+      <div id="answerPostSection" class="answer-post-section" style="{% if page.status != 'answered' %}display: none;{% endif %}">
+        <label for="answerPostUrl">Answer Post URL:</label>
+        <input type="text" id="answerPostUrl" placeholder="/path/to/answer/post.html" value="{{ page.answer_post }}">
+      </div>
+
+      <button id="copyStatusUpdate" class="button-primary">Copy Updated Question</button>
+      <div id="statusCopiedMessage" class="copied-message">Updated template copied to clipboard!</div>
+    </div>
+
+    <!-- Create answer post section -->
+    <div class="create-answer-container">
+      <h3>Create Answer Post</h3>
+      <p>Write a post that answers this question</p>
+      <button id="copyAnswerPostTemplate" class="button-secondary">Copy Answer Post Template</button>
+      <div id="answerPostCopiedMessage" class="copied-message">Template copied to clipboard!</div>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    let selectedStatus = "{{ page.status }}";
+    let answerPostUrl = "{{ page.answer_post }}";
+    const statusButtons = document.querySelectorAll('.status-button');
+    const copyStatusBtn = document.getElementById('copyStatusUpdate');
+    const statusCopiedMessage = document.getElementById('statusCopiedMessage');
+    const copyAnswerPostBtn = document.getElementById('copyAnswerPostTemplate');
+    const answerPostCopiedMessage = document.getElementById('answerPostCopiedMessage');
+    const answerPostSection = document.getElementById('answerPostSection');
+    const answerPostUrlInput = document.getElementById('answerPostUrl');
+
+    // Status button selection
+    statusButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        statusButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        selectedStatus = this.getAttribute('data-status');
+
+        // Show/hide answer post URL input based on selected status
+        if (selectedStatus === 'answered') {
+          answerPostSection.style.display = 'block';
+        } else {
+          answerPostSection.style.display = 'none';
+        }
+      });
+    });
+
+    // Update answer post URL when input changes
+    if (answerPostUrlInput) {
+      answerPostUrlInput.addEventListener('input', function() {
+        answerPostUrl = this.value;
+      });
+    }
+
+    // Copy updated question with new status
+    if (copyStatusBtn) {
+      copyStatusBtn.addEventListener('click', function() {
+        // Include answer_post only if status is 'answered'
+        const answerPostLine = (selectedStatus === 'answered' && answerPostUrl)
+          ? `\nanswer_post: ${answerPostUrl}`
+          : '';
+
+        const frontMatter = `---
+layout: question
+title: {{ page.title | jsonify }}
+date: {{ page.date | date: '%Y-%m-%d' }}
+status: ${selectedStatus}
+related_post: {{ page.related_post }}
+related_tags: {{ page.related_tags | jsonify }}
+author: {{ page.author }}
+priority: {{ page.priority }}${answerPostLine}
+---`;
+
+        const content = document.querySelector('.question-content').textContent.trim();
+        const template = frontMatter + '\n\n' + content;
+
+        navigator.clipboard.writeText(template).then(function() {
+          // Show copied message
+          statusCopiedMessage.style.opacity = '1';
+
+          // Hide after 2 seconds
+          setTimeout(function() {
+            statusCopiedMessage.style.opacity = '0';
+          }, 2000);
+        });
+      });
+    }
+
+    // Copy answer post template
+    if (copyAnswerPostBtn) {
+      copyAnswerPostBtn.addEventListener('click', function() {
+        const today = new Date();
+        const dateStr = today.toISOString().slice(0, 10); // YYYY-MM-DD
+
+        // Generate suggested filename
+        const questionTitle = "{{ page.title | slugify }}";
+        const suggestedTitle = `${dateStr}-answer-to-${questionTitle}.md`;
+
+        // Get the tags
+        {% if page.related_tags %}
+        const tags = {{ page.related_tags | jsonify }};
+        {% else %}
+        const tags = ["question-answer"];
+        {% endif %}
+
+        // Format tags properly for the template
+        let tagsFormatted;
+        if (Array.isArray(tags) && tags.length > 0) {
+          tagsFormatted = JSON.stringify(tags);
+        } else {
+          tagsFormatted = '["question-answer"]';
+        }
+
+        // Create template for a new post that answers the question
+        const template = `---
+layout: post
+title: "Answer: {{ page.title | escape }}"
+date: ${dateStr}
+author: {{ page.author }}
+tags: ${tagsFormatted}
+question_ref: {{ page.path }}
+---
+
+This post answers the question: [{{ page.title }}]({{ page.url | relative_url }})
+
+## Answer
+
+Write your detailed answer here. You can use markdown formatting.
+
+- Point 1
+- Point 2
+
+## Code examples
+
+\`\`\`
+code here
+\`\`\`
+
+## Further reading
+
+Links to additional resources.
+
+---
+
+Remember to update the original question with:
+1. Status: answered
+2. Answer post URL: /YYYY/MM/DD/answer-to-${questionTitle}.html
+
+`;
+
+        navigator.clipboard.writeText(template).then(function() {
+          // Show copied message
+          answerPostCopiedMessage.style.opacity = '1';
+
+          // Show filename suggestion
+          answerPostCopiedMessage.textContent = `Template copied! Suggested filename: ${suggestedTitle}`;
+
+          // Hide after 3 seconds
+          setTimeout(function() {
+            answerPostCopiedMessage.style.opacity = '0';
+
+            // Reset text after fade out
+            setTimeout(function() {
+              answerPostCopiedMessage.textContent = 'Template copied to clipboard!';
+            }, 300);
+          }, 3000);
+        });
+      });
+    }
+  });
+</script>

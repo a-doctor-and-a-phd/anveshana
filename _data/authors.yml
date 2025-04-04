@@ -1,0 +1,9 @@
+sibling1:
+  name: Sibling 1
+  display_name: Sibling 1
+  color: "#00BFA5"
+
+sibling2:
+  name: Sibling 2
+  display_name: Sibling 2
+  color: "#e28413"
