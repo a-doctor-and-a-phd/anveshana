@@ -21,14 +21,8 @@ layout: default
     {% if page.related_post %}
 <div class="question-related-post">
   <span>From:</span>
-  {% assign post_path = page.related_post | replace: '_posts/', '' | replace: '.md', '' %}
-  {% assign post_parts = post_path | split: '-' %}
-  {% assign post_year = post_parts[0] %}
-  {% assign post_month = post_parts[1] %}
-  {% assign post_day = post_parts[2] %}
-  {% assign post_title = post_path | replace_first: post_year | replace_first: '-' | replace_first: post_month | replace_first: '-' | replace_first: post_day | replace_first: '-' | strip %}
-  {% assign post_url = post_year | append: '/' | append: post_month | append: '/' | append: post_day | append: '/' | append: post_title | append: '.html' %}
-  <a href="{{ post_url | prepend: '/' | relative_url }}">{{ page.related_post | replace: '-', ' ' | replace: '_posts/', '' | replace: '.md', '' }}</a>
+  {% assign related_post = site.posts | where: "path", page.related_post | first %}
+  <a href="{{ related_post.url | relative_url }}">{{ related_post.title }}</a>
 </div>
 {% endif %}
 
@@ -58,11 +52,11 @@ layout: default
   </div>
   {% endif %}
 
+  <hr>
   {% if page.status != 'answered' %}
   <div class="question-actions">
     <!-- Status update section -->
     <div class="status-update-container">
-      <h3>Update Question Status</h3>
       <div class="status-buttons">
         <button class="status-button {% if page.status == 'open' %}active{% endif %}" data-status="open">Open</button>
         <button class="status-button {% if page.status == 'in-progress' %}active{% endif %}" data-status="in-progress">In Progress</button>
@@ -71,19 +65,17 @@ layout: default
 
       <!-- Answer post URL input (shown only when status is 'answered') -->
       <div id="answerPostSection" class="answer-post-section" style="{% if page.status != 'answered' %}display: none;{% endif %}">
-        <label for="answerPostUrl">Answer Post URL:</label>
-        <input type="text" id="answerPostUrl" placeholder="/path/to/answer/post.html" value="{{ page.answer_post }}">
+        <label for="answerPostUrl">Filename:</label>
+        <input type="text" id="answerPostUrl" placeholder="YYYY-MM-DD-name.md" value="{{ page.answer_post }}">
       </div>
 
-      <button id="copyStatusUpdate" class="button-primary">Copy Updated Question</button>
+      <button id="copyStatusUpdate" class="button-primary">Update Status</button>
       <div id="statusCopiedMessage" class="copied-message">Updated template copied to clipboard!</div>
     </div>
 
     <!-- Create answer post section -->
     <div class="create-answer-container">
-      <h3>Create Answer Post</h3>
-      <p>Write a post that answers this question</p>
-      <button id="copyAnswerPostTemplate" class="button-secondary">Copy Answer Post Template</button>
+      <button id="copyAnswerPostTemplate" class="button-primary">Add an Answer</button>
       <div id="answerPostCopiedMessage" class="copied-message">Template copied to clipboard!</div>
     </div>
   </div>

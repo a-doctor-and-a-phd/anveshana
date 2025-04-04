@@ -5,7 +5,13 @@ layout: default
   <header class="post-header">
     <div class="post-meta">
       <span class="post-date">{{ page.date | date: site.learning_journal.date_format }}</span>
-      <span class="post-author author-{{ page.author }}">{{ page.author }}</span>
+  <span class="post-author author-{{ page.author }}">
+    {% if site.data.authors[page.author] %}
+      {{ site.data.authors[page.author].display_name }}
+    {% else %}
+      {{ page.author }}
+    {% endif %}
+  </span>
     </div>
     <h1 class="post-title">{{ page.title }}</h1>
     <div class="post-tags">
@@ -19,10 +25,11 @@ layout: default
     {{ content }}
   </div>
 
+  <hr>
   {% include question-related.html %}
 
   <div class="post-actions">
-    <button id="copyQuestionTemplate" class="button-primary">Copy Question Template</button>
+    <button id="copyQuestionTemplate" class="button-primary">Add a Question</button>
     <div id="templateCopiedMessage" class="copied-message">Template copied to clipboard!</div>
   </div>
 
