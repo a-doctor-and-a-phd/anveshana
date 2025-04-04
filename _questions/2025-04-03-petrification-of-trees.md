@@ -9,4 +9,4 @@ author: mr
 priority: medium
 ---
 
-I don't understand these yet.
+I don’t understand these yet.

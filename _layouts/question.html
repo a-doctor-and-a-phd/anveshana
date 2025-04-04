@@ -47,10 +47,18 @@ layout: default
   <div class="question-answer">
     <h2>Answer</h2>
     <p>This question has been answered in the following post:</p>
-    <a href="{{ page.answer_post | relative_url }}" class="answer-link">Read the answer</a>
+    {% assign answer_path = page.answer_post | replace: '_posts/', '' | replace: '.md', '' %}
+{% assign answer_parts = answer_path | split: '-' %}
+{% assign answer_year = answer_parts[0] %}
+{% assign answer_month = answer_parts[1] %}
+{% assign answer_day = answer_parts[2] %}
+{% assign answer_title = answer_path | replace_first: answer_year | replace_first: '-' | replace_first: answer_month | replace_first: '-' | replace_first: answer_day | replace_first: '-' | strip %}
+{% assign answer_url = answer_year | append: '/' | append: answer_month | append: '/' | append: answer_day | append: '/' | append: answer_title | append: '.html' %}
+<a href="{{ answer_url | prepend: '/' | relative_url }}" class="answer-link">Read the answer</a>
   </div>
   {% endif %}
 
+  {% if page.status != 'answered' %}
   <div class="question-actions">
     <!-- Status update section -->
     <div class="status-update-container">
@@ -79,53 +87,59 @@ layout: default
       <div id="answerPostCopiedMessage" class="copied-message">Template copied to clipboard!</div>
     </div>
   </div>
+  {% endif %}
 </article>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    let selectedStatus = "{{ page.status }}";
-    let answerPostUrl = "{{ page.answer_post }}";
-    const statusButtons = document.querySelectorAll('.status-button');
-    const copyStatusBtn = document.getElementById('copyStatusUpdate');
-    const statusCopiedMessage = document.getElementById('statusCopiedMessage');
-    const copyAnswerPostBtn = document.getElementById('copyAnswerPostTemplate');
-    const answerPostCopiedMessage = document.getElementById('answerPostCopiedMessage');
-    const answerPostSection = document.getElementById('answerPostSection');
-    const answerPostUrlInput = document.getElementById('answerPostUrl');
+    // Check if question has already been answered
+    const isAnswered = "{{ page.status }}" === "answered";
+    
+    // Only run the script if the question hasn't been answered yet
+    if (!isAnswered) {
+      // Elements
+      let selectedStatus = "{{ page.status }}";
+      let answerPostUrl = "{{ page.answer_post }}";
+      const statusButtons = document.querySelectorAll('.status-button');
+      const copyStatusBtn = document.getElementById('copyStatusUpdate');
+      const statusCopiedMessage = document.getElementById('statusCopiedMessage');
+      const copyAnswerPostBtn = document.getElementById('copyAnswerPostTemplate');
+      const answerPostCopiedMessage = document.getElementById('answerPostCopiedMessage');
+      const answerPostSection = document.getElementById('answerPostSection');
+      const answerPostUrlInput = document.getElementById('answerPostUrl');
 
-    // Status button selection
-    statusButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        statusButtons.forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        selectedStatus = this.getAttribute('data-status');
+      // Status button selection
+      statusButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          statusButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          selectedStatus = this.getAttribute('data-status');
 
-        // Show/hide answer post URL input based on selected status
-        if (selectedStatus === 'answered') {
-          answerPostSection.style.display = 'block';
-        } else {
-          answerPostSection.style.display = 'none';
-        }
+          // Show/hide answer post URL input based on selected status
+          if (selectedStatus === 'answered') {
+            answerPostSection.style.display = 'block';
+          } else {
+            answerPostSection.style.display = 'none';
+          }
+        });
       });
-    });
 
-    // Update answer post URL when input changes
-    if (answerPostUrlInput) {
-      answerPostUrlInput.addEventListener('input', function() {
-        answerPostUrl = this.value;
-      });
-    }
+      // Update answer post URL when input changes
+      if (answerPostUrlInput) {
+        answerPostUrlInput.addEventListener('input', function() {
+          answerPostUrl = this.value;
+        });
+      }
 
-    // Copy updated question with new status
-    if (copyStatusBtn) {
-      copyStatusBtn.addEventListener('click', function() {
-        // Include answer_post only if status is 'answered'
-        const answerPostLine = (selectedStatus === 'answered' && answerPostUrl)
-          ? `\nanswer_post: ${answerPostUrl}`
-          : '';
+      // Copy updated question with new status
+      if (copyStatusBtn) {
+        copyStatusBtn.addEventListener('click', function() {
+          // Include answer_post only if status is 'answered'
+          const answerPostLine = (selectedStatus === 'answered' && answerPostUrl)
+            ? `\nanswer_post: ${answerPostUrl}`
+            : '';
 
-        const frontMatter = `---
+          const frontMatter = `---
 layout: question
 title: {{ page.title | jsonify }}
 date: {{ page.date | date: '%Y-%m-%d' }}
@@ -136,48 +150,48 @@ author: {{ page.author }}
 priority: {{ page.priority }}${answerPostLine}
 ---`;
 
-        const content = document.querySelector('.question-content').textContent.trim();
-        const template = frontMatter + '\n\n' + content;
+          const content = document.querySelector('.question-content').textContent.trim();
+          const template = frontMatter + '\n\n' + content;
 
-        navigator.clipboard.writeText(template).then(function() {
-          // Show copied message
-          statusCopiedMessage.style.opacity = '1';
+          navigator.clipboard.writeText(template).then(function() {
+            // Show copied message
+            statusCopiedMessage.style.opacity = '1';
 
-          // Hide after 2 seconds
-          setTimeout(function() {
-            statusCopiedMessage.style.opacity = '0';
-          }, 2000);
+            // Hide after 2 seconds
+            setTimeout(function() {
+              statusCopiedMessage.style.opacity = '0';
+            }, 2000);
+          });
         });
-      });
-    }
+      }
 
-    // Copy answer post template
-    if (copyAnswerPostBtn) {
-      copyAnswerPostBtn.addEventListener('click', function() {
-        const today = new Date();
-        const dateStr = today.toISOString().slice(0, 10); // YYYY-MM-DD
+      // Copy answer post template
+      if (copyAnswerPostBtn) {
+        copyAnswerPostBtn.addEventListener('click', function() {
+          const today = new Date();
+          const dateStr = today.toISOString().slice(0, 10); // YYYY-MM-DD
 
-        // Generate suggested filename
-        const questionTitle = "{{ page.title | slugify }}";
-        const suggestedTitle = `${dateStr}-answer-to-${questionTitle}.md`;
+          // Generate suggested filename
+          const questionTitle = "{{ page.title | slugify }}";
+          const suggestedTitle = `${dateStr}-answer-to-${questionTitle}.md`;
 
-        // Get the tags
-        {% if page.related_tags %}
-        const tags = {{ page.related_tags | jsonify }};
-        {% else %}
-        const tags = ["question-answer"];
-        {% endif %}
+          // Get the tags
+          {% if page.related_tags %}
+          const tags = {{ page.related_tags | jsonify }};
+          {% else %}
+          const tags = ["question-answer"];
+          {% endif %}
 
-        // Format tags properly for the template
-        let tagsFormatted;
-        if (Array.isArray(tags) && tags.length > 0) {
-          tagsFormatted = JSON.stringify(tags);
-        } else {
-          tagsFormatted = '["question-answer"]';
-        }
+          // Format tags properly for the template
+          let tagsFormatted;
+          if (Array.isArray(tags) && tags.length > 0) {
+            tagsFormatted = JSON.stringify(tags);
+          } else {
+            tagsFormatted = '["question-answer"]';
+          }
 
-        // Create template for a new post that answers the question
-        const template = `---
+          // Create template for a new post that answers the question
+          const template = `---
 layout: post
 title: "Answer: {{ page.title | escape }}"
 date: ${dateStr}
@@ -186,22 +200,10 @@ tags: ${tagsFormatted}
 question_ref: {{ page.path }}
 ---
 
-This post answers the question: [{{ page.title }}]({{ page.url | relative_url }})
-
-## Answer
-
 Write your detailed answer here. You can use markdown formatting.
 
 - Point 1
 - Point 2
-
-## Code examples
-
-\`\`\`
-code here
-\`\`\`
-
-## Further reading
 
 Links to additional resources.
 
@@ -209,28 +211,29 @@ Links to additional resources.
 
 Remember to update the original question with:
 1. Status: answered
-2. Answer post URL: /YYYY/MM/DD/answer-to-${questionTitle}.html
+2. Answer post URL: YYYY-MM-DD-answer-to-${questionTitle}.md
 
 `;
 
-        navigator.clipboard.writeText(template).then(function() {
-          // Show copied message
-          answerPostCopiedMessage.style.opacity = '1';
+          navigator.clipboard.writeText(template).then(function() {
+            // Show copied message
+            answerPostCopiedMessage.style.opacity = '1';
 
-          // Show filename suggestion
-          answerPostCopiedMessage.textContent = `Template copied! Suggested filename: ${suggestedTitle}`;
+            // Show filename suggestion
+            answerPostCopiedMessage.textContent = `Template copied! Suggested filename: ${suggestedTitle}`;
 
-          // Hide after 3 seconds
-          setTimeout(function() {
-            answerPostCopiedMessage.style.opacity = '0';
-
-            // Reset text after fade out
+            // Hide after 3 seconds
             setTimeout(function() {
-              answerPostCopiedMessage.textContent = 'Template copied to clipboard!';
-            }, 300);
-          }, 3000);
+              answerPostCopiedMessage.style.opacity = '0';
+
+              // Reset text after fade out
+              setTimeout(function() {
+                answerPostCopiedMessage.textContent = 'Template copied to clipboard!';
+              }, 300);
+            }, 3000);
+          });
         });
-      });
+      }
     }
   });
 </script>
