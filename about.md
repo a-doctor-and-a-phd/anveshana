@@ -17,11 +17,11 @@ Each day, we add entries about what we've learned. Posts are organized chronolog
 
 ## About Us
 
-**Sibling 1**: Brief bio here...
+**Harshita**: She is a Doctor in training.
 
-**Sibling 2**: Brief bio here...
+**Mythreyi**: She is a PhD in training.
 
 ## Technical Details
 
-This site is built with [Jekyll](https://jekyllrb.com/) and hosted on [GitHub Pages](https://pages.github.com/). The source code is available on [GitHub](https://github.com/yourusername/your-repository).
+This site is built with [Jekyll](https://jekyllrb.com/) and hosted on [GitHub Pages](https://pages.github.com/). The source code is available on [GitHub](https://github.com/a-doctor-and-a-phd/anveshana).
 

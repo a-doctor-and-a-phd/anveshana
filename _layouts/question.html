@@ -19,11 +19,18 @@ layout: default
 </div>
 
     {% if page.related_post %}
-    <div class="question-related-post">
-      <span>From:</span>
-      <a href="{{ page.related_post | replace: '_posts/', '' | replace: '.md', '' | prepend: '/' | relative_url }}">{{ page.related_post | replace: '-', ' ' | replace: '_posts/', '' | replace: '.md', '' }}</a>
-    </div>
-    {% endif %}
+<div class="question-related-post">
+  <span>From:</span>
+  {% assign post_path = page.related_post | replace: '_posts/', '' | replace: '.md', '' %}
+  {% assign post_parts = post_path | split: '-' %}
+  {% assign post_year = post_parts[0] %}
+  {% assign post_month = post_parts[1] %}
+  {% assign post_day = post_parts[2] %}
+  {% assign post_title = post_path | replace_first: post_year | replace_first: '-' | replace_first: post_month | replace_first: '-' | replace_first: post_day | replace_first: '-' | strip %}
+  {% assign post_url = post_year | append: '/' | append: post_month | append: '/' | append: post_day | append: '/' | append: post_title | append: '.html' %}
+  <a href="{{ post_url | prepend: '/' | relative_url }}">{{ page.related_post | replace: '-', ' ' | replace: '_posts/', '' | replace: '.md', '' }}</a>
+</div>
+{% endif %}
 
     <div class="question-tags">
       {% for tag in page.related_tags %}

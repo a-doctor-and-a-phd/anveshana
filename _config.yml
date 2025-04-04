@@ -1,7 +1,7 @@
-title: On A Quest for Curiosity
-email: doctorandaphd@gmail.com
+title: Anveshana
+email: r.mythreyi.rr@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  A collaborative learning journal
+  A daily dose of curiosity
 baseurl: "/anveshana" # the subpath of your site, e.g. /blog
 url: "https://a-doctor-and-a-phd.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
@@ -58,3 +58,6 @@ exclude:
 # Custom variables
 learning_journal:
   date_format: "%b %-d, %Y"
+
+github_username: a-doctor-and-a-phd
+repository_name: anveshana

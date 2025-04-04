@@ -141,35 +141,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const postTemplate = `---
 layout: post
-title: "Learning Journal: [Topic]"
+title: "[Topic]"
 date: ${dateStr}
 # Choose an author from the options below:
 ${authorOptions}author: [author-id]
 tags: [topic1, topic2]
 ---
 
-## What I Learned Today
-
 [Describe what you learned today]
 
-## Challenges I Faced
-
-[Describe any challenges or problems you encountered]
-
-## How I Overcame Them
-
-[Explain how you solved the problems or what you plan to try next]
 
 ## Resources I Found Helpful
 
 - [Resource 1](url)
 - [Resource 2](url)
 
-## Tomorrow's Goals
-
-- [ ] Goal 1
-- [ ] Goal 2
-- [ ] Goal 3
 `;
 
       copyToClipboard(postTemplate);
@@ -199,21 +185,11 @@ priority: medium
 related_tags: [topic1, topic2]
 ---
 
-## Question
 
 [Clearly state your question here]
 
-## Context
 
 [Provide any background information that helps understand the question]
-
-## What I've Tried
-
-[Describe what approaches you've already attempted]
-
-## Why This Is Important
-
-[Explain why you need to know this or how it will help your learning]
 `;
 
       copyToClipboard(questionTemplate);

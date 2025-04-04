@@ -196,12 +196,12 @@
   font-weight: 600;
 }
 
-.author-sibling1 {
+.author-mr {
   background-color: rgba(var(--author-one-rgb, var(--primary-rgb)), 0.15);
   color: var(--author-one, var(--primary));
 }
 
-.author-sibling2 {
+.author-hr {
   background-color: rgba(var(--author-two-rgb, var(--secondary-rgb)), 0.15);
   color: var(--author-two, var(--secondary));
 }
@@ -466,11 +466,11 @@
   border-radius: 2px;
 }
 
-.entry-sibling1 {
+.entry-mr {
   background-color: var(--author-one, var(--primary));
 }
 
-.entry-sibling2 {
+.entry-hr {
   background-color: var(--author-two, var(--secondary));
 }
 

@@ -1,107 +1,174 @@
 :root {
   /* Light theme - inspired by the shared palettes */
-  --background: #F6F2FF;  /* Light lavender background from second palette */
+  --background: #F6F2FF;  /* Light lavender background */
   --card: #FFFFFF;
-  --heading: #297373;  /* Teal from third palette */
-  --text: #393A3A;     /* Dark gray - slightly softened from third palette */
-  --text-muted: #7EA16B;  /* Muted green from first palette */
+  --heading: #4B3A72;  /* Changed to purple - distinct from teal primary */
+  --text: #393A3A;     /* Dark gray */
+  --text-muted: #8B9D83;  /* Adjusted muted green */
   --border: #E6E6E6;
   --shadow: rgba(57, 58, 58, 0.1);
-  --hover-bg: #F1F7E6;  /* Very light version of the lime green */
+  --hover-bg: #F1F7E6;  /* Very light lime green */
+
+
+
 
   /* Primary and secondary colors */
-  --primary: #297373;   /* Teal from third palette */
+  --primary: #297373;   /* Teal */
   --primary-rgb: 41, 115, 115;
   --primary-dark: #1D5C5C;
 
-  --secondary: #FF8552;  /* Coral/orange from third palette */
-  --secondary-rgb: 255, 133, 82;
-  --secondary-dark: #E66F3E;
+
+
+
+  --secondary: #E28413;  /* Amber orange - matching author-two */
+  --secondary-rgb: 226, 132, 19;
+  --secondary-dark: #C06E0F;
+
+
+
 
   /* Additional UI elements */
   --code-bg: #F0F0F7;
   --filter-bg: #E9ECF0;
-  --tag-bg: #F1F7E6;   /* Light lime green */
+  --tag-bg: #EFF5D4;   /* Adjusted light lime green */
+
+
+
 
   /* Priority indicators */
-  --priority-high: #7D161E;     /* Deep red from second palette */
+  --priority-high: #7D161E;     /* Deep red */
   --priority-high-rgb: 125, 22, 30;
 
-  --priority-medium: #7EA16B;   /* Green from second palette */
-  --priority-medium-rgb: 126, 161, 107;
 
-  --priority-low: #C3D898;      /* Light green from second palette */
+
+
+  --priority-medium: #AD9A5D;   /* Muted gold - replacing green */
+  --priority-medium-rgb: 173, 154, 93;
+
+
+
+
+  --priority-low: #C3D898;      /* Light green */
   --priority-low-rgb: 195, 216, 152;
 
+
+
+
   /* Status indicators */
-  --status-open: #5EB1BF;       /* Teal from third palette */
-  --status-open-rgb: 94, 177, 191;
+  --status-open: #5896AB;       /* Adjusted slate blue - distinct from primary */
+  --status-open-rgb: 88, 150, 171;
 
-  --status-in-progress: #7EA16B; /* Green from second palette */
-  --status-in-progress-rgb: 126, 161, 107;
 
-  --status-closed: #B98EA7;     /* Mauve from first palette */
+
+
+  --status-in-progress: #A67C52; /* Warm brown - replacing duplicate green */
+  --status-in-progress-rgb: 166, 124, 82;
+
+
+
+
+  --status-closed: #B98EA7;     /* Mauve */
   --status-closed-rgb: 185, 142, 167;
+
+
+
 
      /* Author distinction colors - same in both themes */
   --author-one: #00BFA5;      /* Teal green */
 --author-one-rgb: 0, 191, 165;
 
+
+
+
   --author-two: #E28413;       /* Amber orange */
   --author-two-rgb: 226, 132, 19;
-
 }
+
+
+
 
 [data-theme="dark"] {
   /* Dark theme */
-  --background: #212922;  /* Dark green/black from first and third palettes */
-  --card: #2D3A4A;        /* Dark slate from first palette */
-  --heading: #DCCFFF;     /* Light lavender from second palette */
+  --background: #212922;  /* Dark green/black */
+  --card: #2D3A4A;        /* Dark slate */
+  --heading: #E5B8FF;     /* Brighter lavender - more distinct from teal primary */
   --text: #E6E6E6;        /* Light gray */
   --text-muted: #A7B8C0;
-  --border: #3D5A6C;      /* Slate blue border from first palette */
+  --border: #3D5A6C;      /* Slate blue border */
   --shadow: rgba(0, 0, 0, 0.4);
   --hover-bg: #2D4A4A;    /* Dark teal hover */
 
-  /* Primary and secondary colors */
-  --primary: #5EB1BF;     /* Lighter teal from second palette */
-  --primary-rgb: 94, 177, 191;
-  --primary-dark: #297373;
 
-  --secondary: #FF8552;   /* Coral/orange from third palette */
-  --secondary-rgb: 255, 133, 82;
-  --secondary-dark: #E66F3E;
+
+
+  /* Primary and secondary colors */
+  --primary: #00BFA5;     /* Teal green - distinct from light theme primary */
+  --primary-rgb: 0, 191, 165;
+  --primary-dark: #008C7A;
+
+
+
+
+  --secondary: #E28413;   /* Amber orange - matching author-two */
+  --secondary-rgb: 226, 132, 19;
+  --secondary-dark: #C06E0F;
+
+
+
 
   /* Additional UI elements */
-  --code-bg: #23022E;     /* Deep purple from second palette */
+  --code-bg: #23022E;     /* Deep purple */
   --filter-bg: #3D5A6C;   /* Slate blue */
   --tag-bg: #2D4A4A;      /* Dark teal */
 
-  /* Priority indicators - keeping same colors for consistency */
-  --priority-high: #FF8552;    /* Coral/orange */
-  --priority-high-rgb: 255, 133, 82;
 
-  --priority-medium: #E9D758;  /* Yellow */
-  --priority-medium-rgb: 233, 215, 88;
 
-  --priority-low: #7EA16B;     /* Green */
-  --priority-low-rgb: 126, 161, 107;
+
+  /* Priority indicators */
+  --priority-high: #D03B30;    /* Adjusted red - distinct from light theme */
+  --priority-high-rgb: 208, 59, 48;
+
+
+
+
+  --priority-medium: #D4B95E;  /* Muted gold - matching light theme concept */
+  --priority-medium-rgb: 212, 185, 94;
+
+
+
+
+  --priority-low: #69A173;     /* Adjusted green - distinct from others */
+  --priority-low-rgb: 105, 161, 115;
+
+
+
 
   /* Status indicators */
-  --status-open: #FF8552;       /* Coral/orange */
-  --status-open-rgb: 255, 133, 82;
+  --status-open: #4F8BAD;       /* Slate blue - distinct from others */
+  --status-open-rgb: 79, 139, 173;
 
-  --status-in-progress: #E9D758; /* Yellow */
-  --status-in-progress-rgb: 233, 215, 88;
 
-  --status-closed: #7EA16B;     /* Green */
-  --status-closed-rgb: 126, 161, 107;
+
+
+  --status-in-progress: #CDA34F; /* Gold - related to medium priority */
+  --status-in-progress-rgb: 205, 163, 79;
+
+
+
+
+  --status-closed: #6CAF94;     /* Mint green - distinct from others */
+  --status-closed-rgb: 108, 175, 148;
+
+
+
 
      /* Author distinction colors - same in both themes */
   --author-one: #00BFA5;      /* Teal green */
 --author-one-rgb: 0, 191, 165;
 
+
+
+
   --author-two: #E28413;       /* Amber orange */
   --author-two-rgb: 226, 132, 19;
 }
-
