@@ -5,7 +5,7 @@ date: 2025-04-04
 # Choose an author from the options below:
 # Mythreyi: mr
 # Harshita: hr
-author: [mr]
+author: mr
 tags: [geology, earth]
 ---
 
