@@ -28,6 +28,6 @@ The bottom line? Quicksands are not as they are depicted in the movies. Yes, you
 
 ## Resources I Found Helpful
 
-- [YouTube]([url](https://www.youtube.com/watch?v=jeqYu4buE0c))
-- [Wikipedia]([url](https://en.wikipedia.org/wiki/Quicksand#cite_note-Bakalar-3))
+- [YouTube](https://www.youtube.com/watch?v=jeqYu4buE0c)
+- [Wikipedia](https://en.wikipedia.org/wiki/Quicksand#cite_note-Bakalar-3)
 
