@@ -40,7 +40,7 @@ Mehendi, also known as henna or மருதாணி, works by staining the ski
 
 ## Resources I Found Helpful
 
-- [Wikipedia] (https://en.wikipedia.org/wiki/Mehndi)
+- [Wikipedia](https://en.wikipedia.org/wiki/Mehndi)
 - [Blogpost](https://www.hennaiom.com/post/how-does-henna-work-the-science-of-henna-stains)
 
 
