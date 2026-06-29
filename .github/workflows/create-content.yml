@@ -13,9 +13,7 @@ jobs:
     if: |
       (contains(github.event.issue.labels.*.name, 'new-post') ||
        contains(github.event.issue.labels.*.name, 'new-question')) &&
-      (github.event.issue.author_association == 'OWNER' ||
-       github.event.issue.author_association == 'MEMBER' ||
-       github.event.issue.author_association == 'COLLABORATOR')
+      (github.actor == 'mythreyiramesh' || github.actor == 'harshitaramesh')
     runs-on: ubuntu-latest
 
     steps:
