@@ -1,0 +1,91 @@
+name: Create content from issue form
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  create:
+    if: |
+      (contains(github.event.issue.labels.*.name, 'new-post') ||
+       contains(github.event.issue.labels.*.name, 'new-question')) &&
+      (github.event.issue.author_association == 'OWNER' ||
+       github.event.issue.author_association == 'MEMBER' ||
+       github.event.issue.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse issue form fields
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/${{ contains(github.event.issue.labels.*.name, 'new-post') && 'new-post.yml' || 'new-question.yml' }}
+
+      - name: Determine content type
+        id: type
+        run: |
+          if [[ "${{ join(github.event.issue.labels.*.name, ',') }}" == *"new-post"* ]]; then
+            echo "value=new-post" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=new-question" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create content file
+        id: create
+        env:
+          CONTENT_TYPE: ${{ steps.type.outputs.value }}
+          FIELD_TITLE: ${{ steps.parse.outputs.issueparser_title }}
+          FIELD_AUTHOR: ${{ steps.parse.outputs.issueparser_author }}
+          FIELD_TAGS: ${{ steps.parse.outputs.issueparser_tags }}
+          FIELD_BODY: ${{ steps.parse.outputs.issueparser_body }}
+          FIELD_PRIORITY: ${{ steps.parse.outputs.issueparser_priority }}
+        run: |
+          created=$(node .github/scripts/create-content.mjs)
+          echo "path=$created" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ steps.create.outputs.path }}"
+          git commit -m "Add ${{ steps.type.outputs.value }}: ${{ steps.parse.outputs.issueparser_title }}"
+          git push
+
+      - name: Comment and close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const path = '${{ steps.create.outputs.path }}';
+            const baseUrl = 'https://a-doctor-and-a-phd.github.io/anveshana';
+            const type = '${{ steps.type.outputs.value }}';
+
+            // Build the live URL from the file path
+            let liveUrl = '';
+            if (type === 'new-post') {
+              // _posts/YYYY-MM-DD-slug.md -> /YYYY/MM/DD/slug.html
+              const m = path.match(/_posts\/(\d{4})-(\d{2})-(\d{2})-(.+)\.md$/);
+              if (m) liveUrl = `${baseUrl}/${m[1]}/${m[2]}/${m[3]}/${m[4]}.html`;
+            } else {
+              // _questions/YYYY-MM-DD-slug.md -> /questions/YYYY-MM-DD-slug/
+              const m = path.match(/_questions\/(.+)\.md$/);
+              if (m) liveUrl = `${baseUrl}/questions/${m[1]}/`;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `File created: \`${path}\`\n\nOnce GitHub Pages rebuilds (usually under a minute), it will be live at: ${liveUrl}`,
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+            });

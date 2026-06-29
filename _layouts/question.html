@@ -37,18 +37,12 @@ layout: default
     {{ content }}
   </div>
 
-  {% if page.status == 'answered' and page.answer_post %}
+  {% assign answer_post = site.posts | where: "question_ref", page.path | first %}
+  {% if answer_post %}
   <div class="question-answer">
     <h2>Answer</h2>
     <p>This question has been answered in the following post:</p>
-    {% assign answer_path = page.answer_post | replace: '_posts/', '' | replace: '.md', '' %}
-{% assign answer_parts = answer_path | split: '-' %}
-{% assign answer_year = answer_parts[0] %}
-{% assign answer_month = answer_parts[1] %}
-{% assign answer_day = answer_parts[2] %}
-{% assign answer_title = answer_path | replace_first: answer_year | replace_first: '-' | replace_first: answer_month | replace_first: '-' | replace_first: answer_day | replace_first: '-' | strip %}
-{% assign answer_url = answer_year | append: '/' | append: answer_month | append: '/' | append: answer_day | append: '/' | append: answer_title | append: '.html' %}
-<a href="{{ answer_url | prepend: '/' | relative_url }}" class="answer-link">Read the answer</a>
+    <a href="{{ answer_post.url | relative_url }}" class="answer-link">{{ answer_post.title }}</a>
   </div>
   {% endif %}
 

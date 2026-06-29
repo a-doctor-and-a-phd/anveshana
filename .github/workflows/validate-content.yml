@@ -1,0 +1,20 @@
+name: Validate content files
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_posts/**'
+      - '_questions/**'
+  pull_request:
+    paths:
+      - '_posts/**'
+      - '_questions/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate posts and questions
+        run: node .github/scripts/validate-content.mjs

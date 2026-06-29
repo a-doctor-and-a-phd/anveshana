@@ -1,0 +1,44 @@
+name: New Post
+description: Write a new learning journal entry. A bot will create the file and commit it automatically.
+labels: [new-post]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: "Geology of the Grand Canyon"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: author
+    attributes:
+      label: Author
+      options:
+        - Mythreyi
+        - Harshita
+    validations:
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Comma-separated list of topics.
+      placeholder: "geology, earth, nature"
+    validations:
+      required: true
+
+  - type: textarea
+    id: body
+    attributes:
+      label: Content
+      description: The body of your post. Markdown is supported.
+      placeholder: |
+        Write what you learned today...
+
+        ## Resources I Found Helpful
+
+        - [Resource 1](url)
+    validations:
+      required: true
